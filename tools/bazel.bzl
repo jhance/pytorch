@@ -1,4 +1,4 @@
-load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library", "cc_test")
+load("@rules_cc//cc:defs.bzl", _cc_binary="cc_binary", _cc_library="cc_library", "cc_test")
 load("@rules_cuda//cuda:defs.bzl", "cuda_library")
 load("@//build_tools/py:py.bzl", "dbx_py_library", "dbx_py_binary")
 load("@pytorch//c10/macros:cmake_configure_file.bzl", "cmake_configure_file")
@@ -13,6 +13,26 @@ def _is_cpu_static_dispatch_build():
 
 def requires_cuda_enabled():
     return ["@//build_tools/gpu:cuda-supported"]
+
+def cc_library(name, copts = [], **kwargs):
+    _cc_library(
+        name = name,
+        copts = copts + [
+            "-Iexternal/pytorch",
+            "-I$(GENDIR)/external/pytorch",
+        ],
+        **kwargs
+    )
+
+def cc_binary(name, copts = [], **kwargs):
+    _cc_binary(
+        name = name,
+        copts = copts + [
+            "-Iexternal/pytorch",
+            "-I$(GENDIR)/external/pytorch",
+        ],
+        **kwargs
+    )
 
 # Rules implementation for the Bazel build system. Since the common
 # build structure aims to replicate Bazel as much as possible, most of

@@ -1,5 +1,5 @@
 load("@bazel_skylib//lib:paths.bzl", "paths")
-load("@rules_cc//cc:defs.bzl", "cc_library")
+load("@pytorch//:tools/bazel.bzl", "cc_library")
 
 CPU_CAPABILITY_NAMES = ["DEFAULT", "AVX2"]
 CAPABILITY_COMPILER_FLAGS = {
