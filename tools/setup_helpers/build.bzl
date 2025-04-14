@@ -4,7 +4,7 @@ def define_targets(rules):
         srcs = ["generate_code.py"],
         visibility = ["//:__pkg__"],
         deps = [
-            rules.requirement("PyYAML"),
+            "@//pip/pyyaml",
             "//tools/autograd",
             "//torchgen",
         ],

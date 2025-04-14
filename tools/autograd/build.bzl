@@ -8,7 +8,7 @@ def define_targets(rules):
         ]),
         visibility = ["//:__subpackages__"],
         deps = [
-            rules.requirement("PyYAML"),
+            "@//pip/pyyaml",
             "//torchgen",
         ],
     )
