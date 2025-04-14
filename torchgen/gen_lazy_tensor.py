@@ -436,6 +436,7 @@ def run_gen_lazy_tensor(
 
     See torch/csrc/lazy/core/shape_inference.cpp #READ THIS! for more information.
     """
+    root_path = os.path.dirname(os.path.dirname(os.path.dirname(aten_path)))
     if shape_inference_hdr is not None:
         expected_shape_infr_decls = list(
             concat_map_codegen(
@@ -446,7 +447,7 @@ def run_gen_lazy_tensor(
             )
         )
 
-        validate_shape_inference_header(shape_inference_hdr, expected_shape_infr_decls)
+        validate_shape_inference_header(os.path.join(root_path, shape_inference_hdr), expected_shape_infr_decls)
     assert class_name is not None
 
     # Generate nativefunction declarations
@@ -465,12 +466,13 @@ def run_gen_lazy_tensor(
     )
 
     # Generate Dispatcher registrations which hook up the nativefunctions
+    rel_output_dir = os.path.relpath(output_dir, root_path)
     for dispatch_key in (
         [backend_key] if autograd_key is None else [backend_key, autograd_key]
     ):
         gen_dispatcher_registrations(
             fm,
-            output_dir,
+            rel_output_dir,
             class_name,
             backend_indices,
             grouped_native_functions,
@@ -505,8 +507,8 @@ def run_gen_lazy_tensor(
                     "torch/csrc/lazy/core/lazy_graph_executor.h",
                     "torch/csrc/lazy/core/metrics.h",
                     "torch/csrc/lazy/core/shape.h",
-                    f"{output_dir}/{backend_key}NativeFunctions.h",
-                    f"{output_dir}/LazyIr.h",
+                    f"{rel_output_dir}/{backend_key}NativeFunctions.h",
+                    f"{rel_output_dir}/LazyIr.h",
                 ]
                 + (
                     ["torch/csrc/lazy/ts_backend/ts_eager_fallback.h"]
@@ -546,6 +548,8 @@ def run_gen_lazy_tensor(
     lazy_ir_obj = lazy_ir_generator(
         backend_indices[backend_key], backend_name, node_base, use_lazy_shape
     )
+
+    node_base_hdr = os.path.relpath(node_base_hdr, output_dir)
 
     fm.write_with_template(
         "LazyIr.h",
