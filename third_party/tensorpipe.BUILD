@@ -1,75 +1,6 @@
 load("@rules_cc//cc:defs.bzl", "cc_library")
 load("@pytorch//third_party:substitution.bzl", "header_template_rule")
 
-LIBUV_COMMON_SRCS = [
-    "third_party/libuv/src/fs-poll.c",
-    "third_party/libuv/src/idna.c",
-    "third_party/libuv/src/inet.c",
-    "third_party/libuv/src/random.c",
-    "third_party/libuv/src/strscpy.c",
-    "third_party/libuv/src/threadpool.c",
-    "third_party/libuv/src/timer.c",
-    "third_party/libuv/src/uv-common.c",
-    "third_party/libuv/src/uv-data-getter-setters.c",
-    "third_party/libuv/src/version.c",
-]
-
-LIBUV_POSIX_SRCS = [
-    "third_party/libuv/src/unix/async.c",
-    "third_party/libuv/src/unix/core.c",
-    "third_party/libuv/src/unix/dl.c",
-    "third_party/libuv/src/unix/fs.c",
-    "third_party/libuv/src/unix/getaddrinfo.c",
-    "third_party/libuv/src/unix/getnameinfo.c",
-    "third_party/libuv/src/unix/loop.c",
-    "third_party/libuv/src/unix/loop-watcher.c",
-    "third_party/libuv/src/unix/pipe.c",
-    "third_party/libuv/src/unix/poll.c",
-    "third_party/libuv/src/unix/process.c",
-    "third_party/libuv/src/unix/random-devurandom.c",
-    "third_party/libuv/src/unix/signal.c",
-    "third_party/libuv/src/unix/stream.c",
-    "third_party/libuv/src/unix/tcp.c",
-    "third_party/libuv/src/unix/thread.c",
-    "third_party/libuv/src/unix/tty.c",
-    "third_party/libuv/src/unix/udp.c",
-]
-
-LIBUV_LINUX_SRCS = LIBUV_POSIX_SRCS + [
-    "third_party/libuv/src/unix/proctitle.c",
-    "third_party/libuv/src/unix/linux-core.c",
-    "third_party/libuv/src/unix/linux-inotify.c",
-    "third_party/libuv/src/unix/linux-syscalls.c",
-    "third_party/libuv/src/unix/procfs-exepath.c",
-    "third_party/libuv/src/unix/random-getrandom.c",
-    "third_party/libuv/src/unix/random-sysctl-linux.c",
-]
-
-cc_library(
-    name = "libuv",
-    srcs = LIBUV_COMMON_SRCS + LIBUV_LINUX_SRCS,
-    includes = [
-        "third_party/libuv/include",
-        "third_party/libuv/src",
-    ],
-    hdrs = glob(
-        [
-            "third_party/libuv/include/*.h",
-            "third_party/libuv/include/uv/*.h",
-            "third_party/libuv/src/*.h",
-            "third_party/libuv/src/unix/*.h",
-        ],
-    ),
-    visibility = ["//visibility:public"],
-)
-
-cc_library(
-    name = "libnop",
-    srcs = [],
-    includes = ["third_party/libnop/include"],
-    hdrs = glob(["third_party/libnop/include/**/*.h"]),
-)
-
 header_template_rule(
     name = "tensorpipe_cpu_config_header",
     src = "tensorpipe/config.h.in",
@@ -155,8 +86,8 @@ cc_library(
     ],
     visibility = ["//visibility:public"],
     deps = [
-        ":libnop",
-        ":libuv",
+        "@libnop",
+        "@libuv",
     ],
 )
 
