@@ -1,5 +1,5 @@
 load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library", "cc_test")
-load("@rules_cuda//cuda:defs.bzl", "cuda_library", "requires_cuda_enabled")
+load("@rules_cuda//cuda:defs.bzl", "cuda_library")
 load("@rules_python//python:defs.bzl", "py_binary", "py_library")
 load("@pytorch//c10/macros:cmake_configure_file.bzl", "cmake_configure_file")
 load("@pytorch//tools/config:defs.bzl", "if_cuda")
@@ -10,6 +10,9 @@ def _genrule(**kwds):
 
 def _is_cpu_static_dispatch_build():
     return False
+
+def requires_cuda_enabled():
+    return ["@//build_tools/gpu:cuda-supported"]
 
 # Rules implementation for the Bazel build system. Since the common
 # build structure aims to replicate Bazel as much as possible, most of
