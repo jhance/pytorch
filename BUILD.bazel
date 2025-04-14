@@ -1,7 +1,8 @@
 load("@bazel_skylib//lib:paths.bzl", "paths")
 load("@pybind11_bazel//:build_defs.bzl", "pybind_extension")
 load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library", "cc_test")
-load("@rules_python//python:defs.bzl", "py_library", "py_test")
+load("@rules_python//python:defs.bzl", "py_test")
+load("@//build_tools/py:py.bzl", "dbx_py_library", "dbx_py_binary")
 load("@pytorch//third_party:substitution.bzl", "header_template_rule", "template_rule")
 load("@pytorch//:tools/bazel.bzl", "rules")
 load("@pytorch//tools/rules:cu.bzl", "cu_library")
@@ -1271,9 +1272,10 @@ cc_library(
     ],
 )
 
-py_binary(
+dbx_py_binary(
     name = "gen_op",
     srcs = ["caffe2/contrib/aten/gen_op.py"],
+    main = "caffe2/contrib/aten/gen_op.py",
     deps = ["//torchgen"],
 )
 
@@ -1757,7 +1759,7 @@ template_rule(
     }),
 )
 
-py_library(
+dbx_py_library(
     name = "pytorch_py",
     visibility = ["//visibility:public"],
     srcs = glob(["torch/**/*.py"], exclude = ["torch/version.py"]) + [":torch/version.py"] + glob(["functorch/**/*.py"]),

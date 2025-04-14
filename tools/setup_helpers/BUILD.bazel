@@ -1,6 +1,9 @@
-py_binary(
+load("@//build_tools/py:py.bzl", "dbx_py_binary")
+
+dbx_py_binary(
     name = "generate_code",
     srcs = ["generate_code.py"],
+    main = "generate_code.py",
     deps = [
         "//tools/autograd",
         "//torchgen",
@@ -8,8 +11,9 @@ py_binary(
     visibility = ["//:__pkg__"],
 )
 
-py_binary(
+dbx_py_binary(
     name = "gen_version_header",
     srcs = ["gen_version_header.py"],
+    main = "gen_version_header.py",
     visibility = ["//:__pkg__"],
 )
