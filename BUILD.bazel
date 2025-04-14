@@ -1587,7 +1587,7 @@ cc_library(
         ":caffe2_headers",
         "//c10",
         "@com_github_google_flatbuffers//:flatbuffers",
-        "@local_config_python//:python_headers",
+        "@//build_tools/py:python-headers",
         "@onnx",
     ],
     alwayslink = True,
