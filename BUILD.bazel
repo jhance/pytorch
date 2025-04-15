@@ -1560,6 +1560,17 @@ cc_library(
 # torch
 torch_cuda_headers = glob(["torch/csrc/cuda/*.h"])
 
+load("@com_github_google_flatbuffers//:build_defs.bzl", "flatbuffer_cc_library")
+
+flatbuffer_cc_library(
+    name = "torch_flatbuffers",
+    srcs = [
+        "torch/csrc/jit/serialization/mobile_bytecode.fbs",
+    ],
+    flatc_args = ["--cpp", "--gen-mutable", "--scoped-enums"],
+    out_prefix = "torch/csrc/jit/serialization/",
+)
+
 cc_library(
     name = "torch_headers",
     hdrs = if_cuda(
@@ -1573,11 +1584,12 @@ cc_library(
         ],
         exclude = [
             "torch/csrc/*/generated/*.h",
+            "torch/csrc/jit/serialization/mobile_bytecode_generated.h",
         ] + torch_cuda_headers,
     ) + GENERATED_AUTOGRAD_CPP + [":version_h"],
     includes = [
         "third_party/kineto/libkineto/include",
-        "torch/csrc",
+        "torch/csrc/jit",
         "torch/csrc/api/include",
         "torch/csrc/distributed",
         "torch/lib",
@@ -1591,6 +1603,7 @@ cc_library(
         "@com_github_google_flatbuffers//:flatbuffers",
         "@//build_tools/py:python-headers",
         "@onnx",
+        ":torch_flatbuffers",
     ],
     alwayslink = True,
 )
