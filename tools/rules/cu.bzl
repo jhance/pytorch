@@ -35,8 +35,11 @@ NVCC_COPTS = [
     # Hence, we just disable this warning altogether. We may want to
     # clean up some of the clear-cut cases that could be risky, but we
     # still likely want to have this disabled for the most part.
+]
+
+NVCC_HOST_COPTS = [
     "-Wno-missing-field-initializers",
 ]
 
 def cu_library(name, srcs, copts = [], **kwargs):
-    cuda_library(name = name, srcs = srcs, copts = NVCC_COPTS + copts, **kwargs)
+    cuda_library(name = name, srcs = srcs, copts = NVCC_COPTS, host_copts = NVCC_HOST_COPTS + copts, **kwargs)
