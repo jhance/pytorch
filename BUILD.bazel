@@ -1702,6 +1702,10 @@ pybind_extension(
         ":torch_python",
         ":aten_nvrtc",
     ],
+    copts = [
+        "-Iexternal/pytorch",
+        "-I$(GENDIR)/external/pytorch",
+    ],
 )
 
 cc_library(
@@ -1721,8 +1725,10 @@ cc_library(
 
 pybind_extension(
     name = "functorch/_C",
-    copts=[
-        "-DTORCH_EXTENSION_NAME=_C"
+    copts = [
+        "-DTORCH_EXTENSION_NAME=_C",
+        "-Iexternal/pytorch",
+        "-I$(GENDIR)/external/pytorch",
     ],
     srcs = [
         "functorch/csrc/init_dim_only.cpp",
